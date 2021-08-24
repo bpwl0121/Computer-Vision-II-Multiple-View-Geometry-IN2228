@@ -1,0 +1,407 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ex</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-06-18"><meta name="DC.source" content="ex.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">image1 = double(imread(<span class="string">'batinria0.tif'</span>));
+image2 = double(imread(<span class="string">'batinria1.tif'</span>));
+[x1,y1,x2,y2] = getpoints2()
+
+K1 = [844.310547 0 243.413315; 0 1202.508301 281.529236; 0 0 1];
+K2 = [852.721008 0 252.021805; 0 1215.657349 288.587189; 0 0 1];
+K1 = inv(K1);
+K2 = inv(K2);
+nPoints = 12;
+<span class="comment">% Transform image coordinates with inverse camera matrices:</span>
+<span class="comment">% can be done without for-loop as well</span>
+<span class="keyword">for</span> i = 1:nPoints
+   l = K1 * [x1(i); y1(i); 1];
+   r = K2 * [x2(i); y2(i); 1];
+   x1(i) = l(1);
+   y1(i) = l(2);
+   x2(i) = r(1);
+   y2(i) = r(2);
+<span class="keyword">end</span>
+
+<span class="comment">% Compute constraint matrix chi:</span>
+chi = zeros(nPoints,9);
+<span class="keyword">for</span> i = 1:nPoints
+    chi(i,:) = kron([x1(i) y1(i) 1],[x2(i) y2(i) 1])';
+<span class="keyword">end</span>
+rank_chi = rank(chi)
+
+<span class="comment">% Find minimizer for |chi*E|:</span>
+[UChi,DChi,VChi] = svd(chi);
+
+<span class="comment">% Unstacked ninth column of V:</span>
+E = reshape(VChi(:,9),3,3)
+
+[U,D,V] = svd(E);
+<span class="keyword">if</span> det(U) &lt; 0 || det(V) &lt; 0
+    [U,D,V] = svd(-E);
+<span class="keyword">end</span>
+
+Rz1 = [0 1 0; -1 0 0; 0 0 1]';
+Rz2 = [0 -1 0; 1 0 0; 0 0 1]';
+R1 = U * Rz1' * V';
+R2 = U * Rz2' * V';
+T_hat1 = U * Rz1 * D * U';
+T_hat2 = U * Rz2 * D * U';
+
+<span class="comment">% Translation belonging to T_hat</span>
+T1 = [ -T_hat1(2,3); T_hat1(1,3); -T_hat1(1,2) ];
+T2 = [ -T_hat2(2,3); T_hat2(1,3); -T_hat2(1,2) ];
+
+<span class="keyword">for</span> i = 1:nPoints
+   x2_hat = hat([x2(i) y2(i) 1]);
+
+   M(3*i-2 : 3*i, i) = x2_hat*R1*[x1(i); y1(i); 1];
+   M(3*i-2 : 3*i, nPoints+1) = x2_hat*T1;
+<span class="keyword">end</span>
+
+[V,D] = eig(M' * M);
+lambda1 = V(1:nPoints, 1);
+gamma  = V(nPoints + 1, 1);
+
+
+<span class="keyword">function</span> A = hat(v)
+    A = [0 -v(3) v(2) ; v(3) 0 -v(1) ; -v(2) v(1) 0];
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> [x1,y1,x2,y2] = getpoints2()
+
+x1 = [
+   10.0000
+   92.0000
+    8.0000
+   92.0000
+  289.0000
+  354.0000
+  289.0000
+  353.0000
+   69.0000
+  294.0000
+   44.0000
+  336.0000
+  ];
+
+y1 = [
+  232.0000
+  230.0000
+  334.0000
+  333.0000
+  230.0000
+  278.0000
+  340.0000
+  332.0000
+   90.0000
+  149.0000
+  475.0000
+  433.0000
+    ];
+
+x2 = [
+  123.0000
+  203.0000
+  123.0000
+  202.0000
+  397.0000
+  472.0000
+  398.0000
+  472.0000
+  182.0000
+  401.0000
+  148.0000
+  447.0000
+    ];
+
+y2 = [
+  239.0000
+  237.0000
+  338.0000
+  338.0000
+  236.0000
+  286.0000
+  348.0000
+  341.0000
+   99.0000
+  153.0000
+  471.0000
+  445.0000
+    ];
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+x1 =
+
+    10
+    92
+     8
+    92
+   289
+   354
+   289
+   353
+    69
+   294
+    44
+   336
+
+
+y1 =
+
+   232
+   230
+   334
+   333
+   230
+   278
+   340
+   332
+    90
+   149
+   475
+   433
+
+
+x2 =
+
+   123
+   203
+   123
+   202
+   397
+   472
+   398
+   472
+   182
+   401
+   148
+   447
+
+
+y2 =
+
+   239
+   237
+   338
+   338
+   236
+   286
+   348
+   341
+    99
+   153
+   471
+   445
+
+
+rank_chi =
+
+     9
+
+
+E =
+
+    0.0003    0.6408    0.0116
+   -0.5801    0.0020   -0.3904
+   -0.0106    0.3165   -0.0015
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+image1 = double(imread('batinria0.tif'));
+image2 = double(imread('batinria1.tif'));
+[x1,y1,x2,y2] = getpoints2()
+
+K1 = [844.310547 0 243.413315; 0 1202.508301 281.529236; 0 0 1];
+K2 = [852.721008 0 252.021805; 0 1215.657349 288.587189; 0 0 1];
+K1 = inv(K1);
+K2 = inv(K2);
+nPoints = 12;
+% Transform image coordinates with inverse camera matrices:
+% can be done without for-loop as well
+for i = 1:nPoints
+   l = K1 * [x1(i); y1(i); 1];
+   r = K2 * [x2(i); y2(i); 1];
+   x1(i) = l(1);
+   y1(i) = l(2);
+   x2(i) = r(1);
+   y2(i) = r(2);
+end
+
+% Compute constraint matrix chi:
+chi = zeros(nPoints,9);
+for i = 1:nPoints
+    chi(i,:) = kron([x1(i) y1(i) 1],[x2(i) y2(i) 1])';
+end
+rank_chi = rank(chi)
+
+% Find minimizer for |chi*E|:
+[UChi,DChi,VChi] = svd(chi);
+
+% Unstacked ninth column of V:
+E = reshape(VChi(:,9),3,3)
+
+[U,D,V] = svd(E);
+if det(U) < 0 || det(V) < 0
+    [U,D,V] = svd(-E);
+end
+
+Rz1 = [0 1 0; -1 0 0; 0 0 1]';
+Rz2 = [0 -1 0; 1 0 0; 0 0 1]';
+R1 = U * Rz1' * V';
+R2 = U * Rz2' * V';
+T_hat1 = U * Rz1 * D * U';
+T_hat2 = U * Rz2 * D * U';
+
+% Translation belonging to T_hat
+T1 = [ -T_hat1(2,3); T_hat1(1,3); -T_hat1(1,2) ];
+T2 = [ -T_hat2(2,3); T_hat2(1,3); -T_hat2(1,2) ];
+
+for i = 1:nPoints
+   x2_hat = hat([x2(i) y2(i) 1]);
+   
+   M(3*i-2 : 3*i, i) = x2_hat*R1*[x1(i); y1(i); 1];
+   M(3*i-2 : 3*i, nPoints+1) = x2_hat*T1;
+end
+
+[V,D] = eig(M' * M);
+lambda1 = V(1:nPoints, 1);
+gamma  = V(nPoints + 1, 1);
+
+
+function A = hat(v)
+    A = [0 -v(3) v(2) ; v(3) 0 -v(1) ; -v(2) v(1) 0];
+end
+
+function [x1,y1,x2,y2] = getpoints2()
+
+x1 = [
+   10.0000
+   92.0000
+    8.0000
+   92.0000
+  289.0000
+  354.0000
+  289.0000
+  353.0000
+   69.0000
+  294.0000
+   44.0000
+  336.0000
+  ];
+
+y1 = [ 
+  232.0000
+  230.0000
+  334.0000
+  333.0000
+  230.0000
+  278.0000
+  340.0000
+  332.0000
+   90.0000
+  149.0000
+  475.0000
+  433.0000
+    ];
+ 
+x2 = [
+  123.0000
+  203.0000
+  123.0000
+  202.0000
+  397.0000
+  472.0000
+  398.0000
+  472.0000
+  182.0000
+  401.0000
+  148.0000
+  447.0000
+    ];
+
+y2 = [ 
+  239.0000
+  237.0000
+  338.0000
+  338.0000
+  236.0000
+  286.0000
+  348.0000
+  341.0000
+   99.0000
+  153.0000
+  471.0000
+  445.0000
+    ];
+
+end
+
+
+##### SOURCE END #####
+--></body></html>
